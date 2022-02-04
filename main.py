@@ -22,6 +22,8 @@ class Game:
         self.dots = []
         self.buffs = []
         self.level = 1
+        self.beginTimer = perf_counter()
+        self.newBegin = 0
         self.timer = 0
         self.godMode = False
         self.buffCount = self.FPS * 8
@@ -172,6 +174,9 @@ class Game:
             self.clock.tick(self.FPS)
             self.redrawWindow(self.window)
 
+            #! Timer
+            self.timer = perf_counter() - self.beginTimer
+
             #! If the player is dead
             if self.player.dead:
                 self.deathCount -= 1
@@ -244,6 +249,7 @@ class Game:
                     ) and self.player.Y:
                         if not self.player.started:
                             self.generate()
+                            self.beginTimer = perf_counter()
                         self.player.Y, self.player.X = False, True
                         self.player.direction = "up"
                         self.player.started = True
@@ -254,6 +260,7 @@ class Game:
                     ) and self.player.X:
                         if not self.player.started:
                             self.generate()
+                            self.beginTimer = perf_counter()
                         self.player.Y, self.player.X = True, False
                         self.player.direction = "right"
                         self.player.started = True
@@ -264,6 +271,7 @@ class Game:
                     ) and self.player.Y:
                         if not self.player.started:
                             self.generate()
+                            self.beginTimer = perf_counter()
                         self.player.Y, self.player.X = False, True
                         self.player.direction = "down"
                         self.player.started = True
@@ -274,6 +282,7 @@ class Game:
                     ) and self.player.X:
                         if not self.player.started:
                             self.generate()
+                            self.beginTimer = perf_counter()
                         self.player.Y, self.player.X = True, False
                         self.player.direction = "left"
                         self.player.started = True
