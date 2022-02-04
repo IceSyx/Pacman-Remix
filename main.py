@@ -377,7 +377,7 @@ class Game:
                         self.player.direction = "left"
                         self.player.started = True
 
-                    #! Activate / Disable GodMode
+                    #! Enable / Disable GodMode
                     elif event.key == pygame.K_g:
                         self.godMode = not self.godMode
 
