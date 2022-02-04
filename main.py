@@ -263,12 +263,13 @@ class Game:
                         self.buffs.append(buff)
 
                     #! Ennemies
-                    self.ennemies = [
-                        YellowEnemy(randint(0, 200), 200),
-                        PinkEnemy(randint(200, 400), 200),
-                        BlueEnemy(randint(400, 600), 200),
-                        RedEnemy(randint(600, 750), 200),
-                    ]
+                    if len(self.ennemies) == 1:
+                        self.ennemies = [
+                            YellowEnemy(randint(0, 200), 200),
+                            PinkEnemy(randint(200, 400), 200),
+                            BlueEnemy(randint(400, 600), 200),
+                            RedEnemy(randint(600, 750), 200),
+                        ]
 
             #! Check if there is still ennemies
             if len(self.ennemies) == 0:
