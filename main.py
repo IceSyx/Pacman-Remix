@@ -67,7 +67,7 @@ class Game:
             self.buffs.append(buff)
 
     def redrawWindow(self, window: pygame.Surface):
-        window.fill((0, 0, 0))  # TODO: retirer quand background
+        window.fill((0, 0, 0))
 
         #! Dots
         for dot in self.dots[:]:
