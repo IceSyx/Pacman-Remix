@@ -12,6 +12,9 @@ from enemy import YellowEnemy, PinkEnemy, RedEnemy, BlueEnemy
 pygame.font.init()
 
 
+fontPath = os.path.join("font", "emulogic.ttf")
+
+
 class Game:
     def __init__(self):
         self.running = True
@@ -27,16 +30,16 @@ class Game:
         self.newBegin = 0
         self.timer = 0
         self.godMode = False
-        self.buffCount = self.FPS * 3
+        self.buffCount = self.FPS * 4
         self.yellow = YellowEnemy(randint(0, 200), 200)
         self.pink = PinkEnemy(randint(200, 400), 200)
         self.blue = BlueEnemy(randint(400, 600), 200)
         self.red = RedEnemy(randint(600, 750), 200)
         self.ennemies = [self.yellow, self.pink, self.blue, self.red]
-        self.mainFont = pygame.font.Font(os.path.join("font", "emulogic.ttf"), 23)
-        self.displayFont = pygame.font.Font(os.path.join("font", "emulogic.ttf"), 15)
-        self.lostFont = pygame.font.Font(os.path.join("font", "emulogic.ttf"), 15)
-        self.pointsFont = pygame.font.Font(os.path.join("font", "emulogic.ttf"), 20)
+        self.mainFont = pygame.font.Font(fontPath, 23)
+        self.displayFont = pygame.font.Font(fontPath, 15)
+        self.lostFont = pygame.font.Font(fontPath, 15)
+        self.pointsFont = pygame.font.Font(fontPath, 20)
         self.slainFont = self.pointsFont.render("+10", True, (255, 255, 255))
         self.dotFont = self.pointsFont.render("+1", True, (255, 255, 255))
         self.buffFont = self.pointsFont.render("+5", True, (255, 255, 255))
@@ -57,7 +60,7 @@ class Game:
             self.dots.append(dot)
 
         #! Buffs
-        for i in range(3 if self.level > 10 else 1):
+        for i in range(2 if self.level > 10 else 1):
             buff = Buff(randint(0, self.WIDTH - 40), randint(0, self.HEIGHT - 40))
             self.buffs.append(buff)
 
@@ -101,6 +104,9 @@ class Game:
         respawnFont = self.lostFont.render(
             f"Try again in {self.deathCount // 60} seconds", True, (255, 255, 255)
         )
+        buffTime = self.displayFont.render(
+            f"Buff Time left: {self.buffCount // 60}", True, (255, 255, 255)
+        )
         if not self.player.started:
             window.blit(
                 startFont,
@@ -143,6 +149,9 @@ class Game:
                 (self.WIDTH / 2 - scoreFont.get_width() // 2, self.HEIGHT / 2 + 70),
             )
 
+        if self.player.buffed:
+            window.blit(buffTime, (self.WIDTH / 2 - buffTime.get_width() // 2, 10))
+
         pygame.display.update()
 
     def handle_player_buff(self):
@@ -151,7 +160,7 @@ class Game:
     def reset_game(self):
         #! Game Variables
         self.deathCount = self.FPS * 4
-        self.buffCount = self.FPS * 3
+        self.buffCount = self.FPS * 4
         self.score = 0
         self.level = 1
 
@@ -256,7 +265,7 @@ class Game:
                         self.dots.append(dot)
 
                     #! Buffs
-                    for i in range(3 if self.level > 10 else 1):
+                    for i in range(2 if self.level > 10 else 1):
                         buff = Buff(
                             randint(0, self.WIDTH - 40), randint(0, self.HEIGHT - 40)
                         )
@@ -264,12 +273,8 @@ class Game:
 
                     #! Ennemies
                     if len(self.ennemies) == 1:
-                        self.ennemies = [
-                            YellowEnemy(randint(0, 200), 200),
-                            PinkEnemy(randint(200, 400), 200),
-                            BlueEnemy(randint(400, 600), 200),
-                            RedEnemy(randint(600, 750), 200),
-                        ]
+                        enemy = self.ennemies[0]
+                        enemy.vel = self.player.vel - 1
 
             #! Check if there is still ennemies
             if len(self.ennemies) == 0:
@@ -287,10 +292,10 @@ class Game:
                 self.buffCount -= 1
                 for enemy in self.ennemies[:]:
                     enemy.img = enemy.vulnerableImgs[0]
-                if self.buffCount == 0:
+                if self.buffCount == self.FPS:
                     self.player.buffed = False
             else:
-                self.buffCount = self.FPS * 3
+                self.buffCount = self.FPS * 4
                 for enemy in self.ennemies[:]:
                     enemy.img = enemy.srcImg
 
