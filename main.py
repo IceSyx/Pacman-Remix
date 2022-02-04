@@ -31,6 +31,8 @@ class Game:
         self.timer = 0
         self.godMode = False
         self.buffCount = self.FPS * 4
+        self.scoreCount = self.FPS * 0.5
+        self.scoreList = []
         self.yellow = YellowEnemy(randint(0, 200), 200)
         self.pink = PinkEnemy(randint(200, 400), 200)
         self.blue = BlueEnemy(randint(400, 600), 200)
@@ -232,24 +234,38 @@ class Game:
                     elif self.collide(enemy, self.player) and self.player.buffed:
                         self.ennemies.remove(enemy)
                         self.score += 10
-                        self.window.blit(self.slainFont, (enemy.x + 10, enemy.y + 10))
-                        pygame.display.update()
+                        self.scoreList.append(
+                            (
+                                self.scoreCount,
+                                self.slainFont,
+                                enemy.x + 10,
+                                enemy.y + 10,
+                            )
+                        )
+                        # self.window.blit(self.slainFont, (enemy.x + 10, enemy.y + 10))
+                        # pygame.display.update()
 
                 #! Check for collisions with dots
                 for dot in self.dots[:]:
                     if self.collide(dot, self.player):
                         self.dots.remove(dot)
                         self.score += 1
-                        self.window.blit(self.dotFont, (dot.x + 10, dot.y + 10))
-                        pygame.display.update()
+                        self.scoreList.append(
+                            (self.scoreCount, self.dotFont, dot.x + 10, dot.y + 10)
+                        )
+                        # self.window.blit(self.dotFont, (dot.x + 10, dot.y + 10))
+                        # pygame.display.update()
 
                 #! Check the collisions with buffs
                 for buff in self.buffs[:]:
                     if self.collide(buff, self.player):
                         self.buffs.remove(buff)
                         self.score += 5
-                        self.window.blit(self.buffFont, (buff.x + 30, buff.y + 30))
-                        pygame.display.update()
+                        self.scoreList.append(
+                            (self.scoreCount, self.buffFont, buff.x + 30, buff.y + 30)
+                        )
+                        # self.window.blit(self.buffFont, (buff.x + 30, buff.y + 30))
+                        # pygame.display.update()
                         self.player.buffed = True
                         self.handle_player_buff()
 
@@ -275,6 +291,16 @@ class Game:
                     if len(self.ennemies) == 1:
                         enemy = self.ennemies[0]
                         enemy.vel = self.player.vel - 1
+
+                #! Display the Scores during 0.5s
+                newScoreList = []
+                for item in self.scoreList[:]:
+                    timer, score, x, y = item
+                    if timer > 0:
+                        newScoreList.append((timer - 1, score, x, y))
+                        self.window.blit(score, (x, y))
+                        pygame.display.update()
+                self.scoreList = newScoreList
 
             #! Check if there is still ennemies
             if len(self.ennemies) == 0:
