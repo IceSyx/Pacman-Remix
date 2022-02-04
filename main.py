@@ -1,4 +1,5 @@
 import pygame
+import os
 from random import randint
 from time import perf_counter
 from sys import exit
@@ -26,15 +27,19 @@ class Game:
         self.newBegin = 0
         self.timer = 0
         self.godMode = False
-        self.buffCount = self.FPS * 8
+        self.buffCount = self.FPS * 3
         self.yellow = YellowEnemy(randint(0, 200), 200)
         self.pink = PinkEnemy(randint(200, 400), 200)
         self.blue = BlueEnemy(randint(400, 600), 200)
         self.red = RedEnemy(randint(600, 750), 200)
         self.ennemies = [self.yellow, self.pink, self.blue, self.red]
-        self.mainFont = pygame.font.SysFont("sans serif", 70)
-        self.displayFont = pygame.font.SysFont("sans serif", 40)
-        self.lostFont = pygame.font.SysFont("sans serif", 40)
+        self.mainFont = pygame.font.Font(os.path.join("font", "emulogic.ttf"), 23)
+        self.displayFont = pygame.font.Font(os.path.join("font", "emulogic.ttf"), 15)
+        self.lostFont = pygame.font.Font(os.path.join("font", "emulogic.ttf"), 15)
+        self.pointsFont = pygame.font.Font(os.path.join("font", "emulogic.ttf"), 20)
+        self.slainFont = self.pointsFont.render("+10", True, (255, 255, 255))
+        self.dotFont = self.pointsFont.render("+1", True, (255, 255, 255))
+        self.buffFont = self.pointsFont.render("+5", True, (255, 255, 255))
         self.window = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
         pygame.display.set_caption("Pacman")
         self.player = Player(self.WIDTH / 2 - 25, self.HEIGHT - self.HEIGHT // 3)
@@ -146,11 +151,13 @@ class Game:
     def reset_game(self):
         #! Game Variables
         self.deathCount = self.FPS * 4
+        self.buffCount = self.FPS * 3
         self.score = 0
         self.level = 1
 
         #! Player
         self.player.started = False
+        self.player.buffed = False
         self.player.open = True
         self.player.dead = False
         self.player.x = self.WIDTH / 2 - 25
@@ -158,10 +165,12 @@ class Game:
         self.player.X = self.player.Y = True
 
         #! Ennemies
-        self.yellow.x, self.yellow.y = randint(0, 200), 200
-        self.pink.x, self.pink.y = randint(200, 400), 200
-        self.blue.x, self.blue.y = randint(400, 600), 200
-        self.red.x, self.red.y = randint(600, 750), 200
+        self.ennemies = [
+            YellowEnemy(randint(0, 200), 200),
+            PinkEnemy(randint(200, 400), 200),
+            BlueEnemy(randint(400, 600), 200),
+            RedEnemy(randint(600, 750), 200),
+        ]
 
         #! Dots
         self.dots = []
@@ -190,8 +199,15 @@ class Game:
                 self.player.animate()
 
                 #! Make the ennemies move towards player
-                for enemy in self.ennemies:
-                    enemy.move(self.player.x, self.player.y, self.player.started)
+                for enemy in self.ennemies[:]:
+                    enemy.move(
+                        self.player.x,
+                        self.player.y,
+                        self.player.started,
+                        self.player.buffed,
+                        self.WIDTH,
+                        self.HEIGHT,
+                    )
 
                     #! Check for collisions with ennemies
                     if (
@@ -203,18 +219,29 @@ class Game:
                         if self.score > self.bestScore:
                             self.bestScore = self.score
 
+                    #! If the payer ate a buff and collided with an enemy
+                    elif self.collide(enemy, self.player) and self.player.buffed:
+                        self.ennemies.remove(enemy)
+                        self.score += 10
+                        self.window.blit(self.slainFont, (enemy.x + 10, enemy.y + 10))
+                        pygame.display.update()
+
                 #! Check for collisions with dots
                 for dot in self.dots[:]:
                     if self.collide(dot, self.player):
                         self.dots.remove(dot)
                         self.score += 1
+                        self.window.blit(self.dotFont, (dot.x + 10, dot.y + 10))
+                        pygame.display.update()
 
                 #! Check the collisions with buffs
                 for buff in self.buffs[:]:
                     if self.collide(buff, self.player):
                         self.buffs.remove(buff)
                         self.score += 5
-                        # self.player.buffed = True
+                        self.window.blit(self.buffFont, (buff.x + 30, buff.y + 30))
+                        pygame.display.update()
+                        self.player.buffed = True
                         self.handle_player_buff()
 
                 #! Check if there is still Dot and Buff on the map
@@ -234,6 +261,29 @@ class Game:
                             randint(0, self.WIDTH - 40), randint(0, self.HEIGHT - 40)
                         )
                         self.buffs.append(buff)
+
+            #! Check if there is still ennemies
+            if len(self.ennemies) == 0:
+                self.score += 20
+                self.player.buffed = False
+                self.ennemies = [
+                    YellowEnemy(randint(0, 200), 200),
+                    PinkEnemy(randint(200, 400), 200),
+                    BlueEnemy(randint(400, 600), 200),
+                    RedEnemy(randint(600, 750), 200),
+                ]
+
+            #! Check if the player is buffed
+            if self.player.buffed:
+                self.buffCount -= 1
+                for enemy in self.ennemies[:]:
+                    enemy.img = enemy.vulnerableImgs[0]
+                if self.buffCount == 0:
+                    self.player.buffed = False
+            else:
+                self.buffCount = self.FPS * 3
+                for enemy in self.ennemies[:]:
+                    enemy.img = enemy.srcImg
 
             #! Check the events
             for event in pygame.event.get():
