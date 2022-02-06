@@ -10,6 +10,7 @@ from enemy import YellowEnemy, PinkEnemy, RedEnemy, BlueEnemy
 
 
 pygame.font.init()
+pygame.mixer.init()
 
 
 fontPath = os.path.join("font", "emulogic.ttf")
@@ -304,7 +305,6 @@ class Game:
 
             #! Check if there is still ennemies
             if len(self.ennemies) == 0:
-                self.score += 20
                 self.player.buffed = False
                 self.ennemies = [
                     YellowEnemy(randint(0, 200), 200),
