@@ -9,8 +9,7 @@ from buff import Buff
 from enemy import YellowEnemy, PinkEnemy, RedEnemy, BlueEnemy
 
 
-pygame.font.init()
-pygame.mixer.init()
+pygame.init()
 
 
 fontPath = os.path.join("font", "emulogic.ttf")
@@ -34,6 +33,7 @@ class Game:
         self.buffCount = self.FPS * 4
         self.scoreCount = self.FPS * 0.5
         self.scoreList = []
+        self.player = Player(self.WIDTH / 2 - 25, self.HEIGHT - self.HEIGHT // 3)
         self.yellow = YellowEnemy(randint(0, 200), 200)
         self.pink = PinkEnemy(randint(200, 400), 200)
         self.blue = BlueEnemy(randint(400, 600), 200)
@@ -47,9 +47,10 @@ class Game:
         self.dotFont = self.pointsFont.render("+1", True, (255, 255, 255))
         self.buffFont = self.pointsFont.render("+5", True, (255, 255, 255))
         self.window = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
-        pygame.display.set_caption("Pacman")
-        self.player = Player(self.WIDTH / 2 - 25, self.HEIGHT - self.HEIGHT // 3)
+        self.icon = self.player.openImgs[1]
         self.clock = pygame.time.Clock()
+        pygame.display.set_caption("Pacman")
+        pygame.display.set_icon(self.icon)
 
     def collide(self, obj1: object, obj2: object):
         offsetX = obj2.x - obj1.x
@@ -157,9 +158,6 @@ class Game:
 
         pygame.display.update()
 
-    def handle_player_buff(self):
-        pass
-
     def reset_game(self):
         #! Game Variables
         self.deathCount = self.FPS * 4
@@ -243,8 +241,6 @@ class Game:
                                 enemy.y + 10,
                             )
                         )
-                        # self.window.blit(self.slainFont, (enemy.x + 10, enemy.y + 10))
-                        # pygame.display.update()
 
                 #! Check for collisions with dots
                 for dot in self.dots[:]:
