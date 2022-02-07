@@ -250,8 +250,6 @@ class Game:
                         self.scoreList.append(
                             (self.scoreCount, self.dotFont, dot.x + 10, dot.y + 10)
                         )
-                        # self.window.blit(self.dotFont, (dot.x + 10, dot.y + 10))
-                        # pygame.display.update()
 
                 #! Check the collisions with buffs
                 for buff in self.buffs[:]:
@@ -261,8 +259,6 @@ class Game:
                         self.scoreList.append(
                             (self.scoreCount, self.buffFont, buff.x + 30, buff.y + 30)
                         )
-                        # self.window.blit(self.buffFont, (buff.x + 30, buff.y + 30))
-                        # pygame.display.update()
                         self.player.buffed = True
                         self.handle_player_buff()
 
