@@ -260,7 +260,6 @@ class Game:
                             (self.scoreCount, self.buffFont, buff.x + 30, buff.y + 30)
                         )
                         self.player.buffed = True
-                        self.handle_player_buff()
 
                 #! Check if there is still Dot and Buff on the map
                 if len(self.dots) == 0 and len(self.buffs) == 0 and self.player.started:
