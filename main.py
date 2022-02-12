@@ -284,7 +284,7 @@ class Game:
                         enemy = self.ennemies[0]
                         enemy.vel = self.player.vel - 1
 
-                #! Display the Scores during 0.5s
+                #! Display the Scores for 0.5s
                 newScoreList = []
                 for item in self.scoreList[:]:
                     timer, score, x, y = item
