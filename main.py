@@ -261,7 +261,7 @@ class Game:
                         )
                         self.player.buffed = True
 
-                #! Check if there is still Dot and Buff on the map
+                #! Check if there is still Dots and Buffs on the map
                 if len(self.dots) == 0 and len(self.buffs) == 0 and self.player.started:
                     #! Dots
                     self.level += 1
