@@ -170,6 +170,7 @@ class Game:
         self.player.buffed = False
         self.player.open = True
         self.player.dead = False
+        self.player.vel = 7
         self.player.x = self.WIDTH / 2 - 25
         self.player.y = self.HEIGHT - self.HEIGHT // 3
         self.player.X = self.player.Y = True
@@ -306,11 +307,12 @@ class Game:
 
             #! Check if the player is buffed
             if self.player.buffed:
+                self.player.vel = 10
                 self.buffCount -= 1
-                for enemy in self.ennemies[:]:
-                    enemy.img = enemy.vulnerableImgs[0]
                 if self.buffCount == self.FPS:
                     self.player.buffed = False
+                for enemy in self.ennemies[:]:
+                    enemy.img = enemy.vulnerableImgs[0]
             else:
                 self.buffCount = self.FPS * 4
                 for enemy in self.ennemies[:]:
