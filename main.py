@@ -43,9 +43,9 @@ class Game:
         self.displayFont = pygame.font.Font(fontPath, 15)
         self.lostFont = pygame.font.Font(fontPath, 15)
         self.pointsFont = pygame.font.Font(fontPath, 20)
-        self.slainFont = self.pointsFont.render("+10", True, (255, 255, 255))
         self.dotFont = self.pointsFont.render("+1", True, (255, 255, 255))
         self.buffFont = self.pointsFont.render("+5", True, (255, 255, 255))
+        self.slainFont = self.pointsFont.render("+10", True, (255, 255, 255))
         self.window = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
         self.icon = self.player.openImgs[1]
         self.clock = pygame.time.Clock()
@@ -106,10 +106,10 @@ class Game:
             (255, 255, 255),
         )
         respawnFont = self.lostFont.render(
-            f"Try again in {self.deathCount // 60} seconds", True, (255, 255, 255)
+            f"Try again in {self.deathCount // self.FPS} seconds", True, (255, 255, 255)
         )
         buffTime = self.displayFont.render(
-            f"Buff Time left: {self.buffCount // 60}", True, (255, 255, 255)
+            f"Buff Time left: {self.buffCount // self.FPS}", True, (255, 255, 255)
         )
         if not self.player.started:
             window.blit(
