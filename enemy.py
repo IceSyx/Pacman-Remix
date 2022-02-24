@@ -29,7 +29,15 @@ class Enemy:
     def get_width(self):
         return self.img.get_width()
 
-    def move(self, playerX: int, playerY: int, started: bool, buffed: bool, width: int, height: int):
+    def move(
+        self,
+        playerX: int,
+        playerY: int,
+        started: bool,
+        buffed: bool,
+        width: int,
+        height: int,
+    ):
         hypotenuse = math.sqrt((self.x - playerX) ** 2 + (self.y - playerY) ** 2)
         vector = (playerX - self.x, playerY - self.y)
         goalX = vector[0] / hypotenuse
