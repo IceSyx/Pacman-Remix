@@ -283,7 +283,7 @@ class Game:
                     #! Ennemies
                     if len(self.ennemies) == 1:
                         enemy = self.ennemies[0]
-                        enemy.vel = self.player.vel - 1
+                        enemy.vel = self.player.vel - 2
 
                 #! Display the Scores for 0.5s
                 newScoreList = []
