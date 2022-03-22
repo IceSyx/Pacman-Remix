@@ -255,12 +255,20 @@ class Game:
                 #! Check the collisions with buffs
                 for buff in self.buffs[:]:
                     if self.collide(buff, self.player):
-                        self.buffs.remove(buff)
-                        self.score += 5
-                        self.scoreList.append(
-                            (self.scoreCount, self.buffFont, buff.x + 30, buff.y + 30)
-                        )
-                        self.player.buffed = True
+                        if self.player.buffed:
+                            self.buffCount += self.FPS * 4
+                        else:
+                            self.buffs.remove(buff)
+                            self.score += 5
+                            self.scoreList.append(
+                                (
+                                    self.scoreCount,
+                                    self.buffFont,
+                                    buff.x + 30,
+                                    buff.y + 30,
+                                )
+                            )
+                            self.player.buffed = True
 
                 #! Check if there is still Dots and Buffs on the map
                 if len(self.dots) == 0 and len(self.buffs) == 0 and self.player.started:
