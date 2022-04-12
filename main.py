@@ -1,8 +1,10 @@
 import pygame
 import os
+
 from random import randint
 from time import perf_counter
 from sys import exit
+
 from player import Player
 from dot import Dot
 from buff import Buff
