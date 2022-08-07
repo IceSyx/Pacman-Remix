@@ -29,6 +29,14 @@ class Enemy:
     def get_width(self):
         return self.img.get_width()
 
+    def handle_image(self, buffed, buffTime, FPS):
+        if buffed:
+            self.animationCount = buffTime
+            if self.animationCount % (FPS / 2) == 0:
+                self.img = self.vulnerableImgs[0]
+            elif self.animationCount % (FPS / 4) == 0:
+                self.img = self.vulnerableImgs[1]
+
     def move(
         self,
         playerX: int,

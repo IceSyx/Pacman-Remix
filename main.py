@@ -321,7 +321,7 @@ class Game:
                 if self.buffCount == self.FPS:
                     self.player.buffed = False
                 for enemy in self.ennemies[:]:
-                    enemy.img = enemy.vulnerableImgs[0]
+                    enemy.handle_image(self.player.buffed, self.buffCount, self.FPS)
             else:
                 self.buffCount = self.FPS * 4
                 for enemy in self.ennemies[:]:
