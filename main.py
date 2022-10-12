@@ -294,13 +294,13 @@ class Game:
                         enemy = self.ennemies[0]
                         enemy.vel = self.player.vel - 2
 
-                #! Display the Scores for 0.5s
+                #! Display the Scores when getting points
                 newScoreList = []
                 for item in self.scoreList[:]:
-                    timer, score, x, y = item
+                    timer, scoreText, x, y = item
                     if timer > 0:
-                        newScoreList.append((timer - 1, score, x, y))
-                        self.window.blit(score, (x, y))
+                        newScoreList.append((timer - 1, scoreText, x, y))
+                        self.window.blit(scoreText, (x, y))
                         pygame.display.update()
                 self.scoreList = newScoreList
 
