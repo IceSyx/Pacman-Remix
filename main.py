@@ -39,7 +39,7 @@ class Game:
         self.yellow = YellowEnemy(randint(0, 200), 200)
         self.pink = PinkEnemy(randint(200, 400), 200)
         self.blue = BlueEnemy(randint(400, 600), 200)
-        self.red = RedEnemy(randint(600, 750), 200)
+        self.red = RedEnemy(randint(600, self.WIDTH - 50), 200)
         self.ennemies = [self.yellow, self.pink, self.blue, self.red]
         self.mainFont = pygame.font.Font(fontPath, 23)
         self.displayFont = pygame.font.Font(fontPath, 15)
